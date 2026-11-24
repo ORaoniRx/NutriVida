@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#315320">
+  <title>NutriVida | Alimentação e bem-estar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div>
+        <a class="brand" href="#" aria-label="NutriVida início">
+          <span class="brand-mark">🥗</span>
+          <span><strong>NutriVida</strong><small>Alimentação e bem-estar</small></span>
+        </a>
+
+        <div class="welcome">
+          <span class="eyebrow">SEU ESPAÇO SAUDÁVEL</span>
+          <h2 id="welcomeTitle">Olá! 👋</h2>
+          <p id="welcomeText">Entre na sua conta para acompanhar seu plano alimentar.</p>
+        </div>
+
+        <div class="side-stats">
+          <div class="stat-card">
+            <span class="stat-icon">🍽️</span>
+            <div><strong id="totalRefeicoes">0</strong><small>Porções no plano</small></div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <div><strong id="totalCalorias">0 kcal</strong><small>Calorias do plano</small></div>
+          </div>
+        </div>
+
+        <button class="summary-button" id="summaryButton">▤ <span>Ver resumo do plano</span></button>
+
+        <div class="side-note">
+          <span>🌱</span>
+          <p>Pequenas escolhas, grandes mudanças. Cuide de você todos os dias!</p>
+        </div>
+      </div>
+
+      <footer class="sidebar-footer">
+        <strong>NutriVida</strong>
+        <span>Alimentação e bem-estar</span>
+        <small>Projeto demonstrativo • 2026</small>
+      </footer>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand">🥗 <strong>NutriVida</strong></div>
+        <div class="topbar-spacer"></div>
+        <div id="userArea" class="user-area hidden">
+          <span class="user-avatar" id="userAvatar">U</span>
+          <span id="userNameLabel"></span>
+          <button class="logout-button" id="logoutButton">Sair</button>
+        </div>
+        <button class="login-button" id="loginButton">Entrar / Cadastrar</button>
+      </header>
+
+      <section id="catalogView">
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">DESCUBRA E ORGANIZE</span>
+            <h1>Catálogo de alimentos</h1>
+            <p>Encontre opções gostosas para uma rotina mais equilibrada.</p>
+          </div>
+        </div>
+
+        <div class="category-bar" role="tablist" aria-label="Categorias de alimentos">
+          <button class="category-tab active" data-category="refeicoes">🍲 Refeições</button>
+          <button class="category-tab" data-category="lanches">🥪 Lanches</button>
+          <button class="category-tab" data-category="vitaminas">🥤 Vitaminas</button>
+        </div>
+
+        <div class="catalog-heading">
+          <div><h2 id="categoryTitle">Refeições</h2><p id="catalogDescription">Opções para suas principais refeições.</p></div>
+          <span class="results-label" id="resultsLabel">Carregando...</span>
+        </div>
+
+        <div id="foodGrid" class="food-grid">
+          <div class="loading-card">Carregando alimentos...</div>
+        </div>
+        <nav class="pagination" id="pagination" aria-label="Paginação do catálogo"></nav>
+      </section>
+
+      <section id="summaryView" class="hidden">
+        <div class="page-heading">
+          <div><span class="eyebrow">SEU PLANEJAMENTO</span><h1>Resumo do Plano</h1><p>Veja suas escolhas organizadas por refeição.</p></div>
+          <button class="back-button" id="backCatalogButton">← Voltar ao catálogo</button>
+        </div>
+        <div id="planSummary"></div>
+        <div class="summary-footer">
+          <div><strong id="summaryCalories">0 kcal</strong><span>Total de calorias</span></div>
+          <div><strong id="summaryPortions">0</strong><span>Porções no plano</span></div>
+          <button class="primary-button" id="finishButton">Finalizar</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="authModal" aria-hidden="true">
+    <section class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="modal-close" id="closeAuth" aria-label="Fechar">×</button>
+      <div class="modal-brand">🥗</div>
+      <span class="eyebrow">BEM-VINDO À NUTRIVIDA</span>
+      <h2 id="authTitle">Acesse o NutriVida</h2>
+      <p class="modal-subtitle">Entre para salvar seus alimentos e organizar seu plano.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-mode="login">Entrar</button>
+        <button class="auth-tab" data-mode="register">Criar conta</button>
+      </div>
+      <form id="authForm">
+        <label for="authName">Nome de usuário</label>
+        <input id="authName" name="nome" type="text" minlength="3" maxlength="40" autocomplete="username" required placeholder="Digite seu nome">
+        <label for="authPassword">Senha</label>
+        <input id="authPassword" name="senha" type="password" minlength="6" maxlength="128" autocomplete="current-password" required placeholder="Digite sua senha">
+        <p id="authError" class="form-error" aria-live="polite"></p>
+        <button class="primary-button full-button" id="authSubmit" type="submit">Entrar</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-backdrop hidden" id="reviewModal" aria-hidden="true">
+    <section class="modal review-modal" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+      <button class="modal-close" id="closeReview" aria-label="Fechar">×</button>
+      <span class="eyebrow">COMPARTILHE SUA OPINIÃO</span>
+      <h2 id="reviewTitle">Avaliações</h2>
+      <div id="reviewList" class="review-list"></div>
+      <form id="reviewForm">
+        <label for="reviewRating">Sua nota</label>
+        <select id="reviewRating" required>
+          <option value="">Selecione uma nota</option>
+          <option value="5">5 - Excelente</option>
+          <option value="4">4 - Muito bom</option>
+          <option value="3">3 - Bom</option>
+          <option value="2">2 - Regular</option>
+          <option value="1">1 - Ruim</option>
+        </select>
+        <label for="reviewComment">Comentário</label>
+        <textarea id="reviewComment" minlength="3" maxlength="500" required placeholder="O que achou deste alimento?"></textarea>
+        <p id="reviewError" class="form-error" aria-live="polite"></p>
+        <button class="primary-button full-button" type="submit">Enviar avaliação</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
