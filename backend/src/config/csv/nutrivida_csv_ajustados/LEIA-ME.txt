@@ -1,0 +1,40 @@
+NUTRIVIDA — CSVs ajustados para o schema nutrivida_schema.sql
+
+Arquivos:
+- usuarios.csv: mantém os IDs, para preservar os relacionamentos.
+- alimentos.csv: colunas reordenadas para o schema e quantidade_ref preenchida com 1.
+- avaliacoes.csv: colunas compatíveis com o schema.
+- favoritos.csv e plano_alimentar.csv: vazios, pois os arquivos originais não tinham registros.
+
+IMPORTANTE SOBRE sessoes.csv:
+Não importar o arquivo original de sessões. Ele contém token_hash, enquanto a tabela
+do NutriVida espera token, criado_em, expira_em e encerrada_em. Além disso, a sessão
+do arquivo já está expirada. O usuário demo deve fazer login para gerar uma sessão nova.
+
+COMO IMPORTAR (execute no CMD/PowerShell):
+1) Entre no banco:
+   psql -U postgres -d nutri_vida
+
+2) Execute os comandos abaixo, substituindo C:/CAMINHO/nutrivida_csv_ajustados
+   pelo caminho real da pasta extraída:
+
+\copy usuarios(id,nome,senha_hash,criado_em) FROM 'C:/CAMINHO/nutrivida_csv_ajustados/usuarios.csv' WITH (FORMAT CSV, HEADER TRUE, ENCODING 'UTF8');
+\copy alimentos(id,nome,emoji,categoria,quantidade_ref,tempo_preparo,calorias,descricao,proteinas,carboidratos,gorduras) FROM 'C:/CAMINHO/nutrivida_csv_ajustados/alimentos.csv' WITH (FORMAT CSV, HEADER TRUE, ENCODING 'UTF8');
+\copy avaliacoes(id,usuario_id,alimento_id,nota,comentario,criado_em) FROM 'C:/CAMINHO/nutrivida_csv_ajustados/avaliacoes.csv' WITH (FORMAT CSV, HEADER TRUE, ENCODING 'UTF8');
+
+3) Como os IDs foram importados explicitamente, atualize as sequências das colunas identity:
+SELECT setval(pg_get_serial_sequence('usuarios','id'), COALESCE((SELECT MAX(id) FROM usuarios), 1), EXISTS (SELECT 1 FROM usuarios));
+SELECT setval(pg_get_serial_sequence('alimentos','id'), COALESCE((SELECT MAX(id) FROM alimentos), 1), EXISTS (SELECT 1 FROM alimentos));
+SELECT setval(pg_get_serial_sequence('avaliacoes','id'), COALESCE((SELECT MAX(id) FROM avaliacoes), 1), EXISTS (SELECT 1 FROM avaliacoes));
+
+4) Confira:
+SELECT id, nome FROM usuarios;
+SELECT id, nome, categoria, quantidade_ref FROM alimentos ORDER BY id;
+SELECT * FROM avaliacoes;
+
+ATENÇÃO:
+- Faça isso em um banco vazio ou confira antes se já existem registros com esses IDs.
+  Caso existam, a importação pode falhar por chave primária duplicada.
+- O hash da senha do usuário demo foi mantido como veio no CSV. O login só funcionará
+  se o código de cadastro/login usar o mesmo formato de scrypt (salt:hash) e parâmetros.
+- Não execute novamente o SQL de criação que contém DROP TABLE, pois ele apaga as tabelas.
